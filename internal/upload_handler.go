@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
-	"time"
 )
 
 func (cfg *FileConfig) UploadFileHandler(w http.ResponseWriter, r *http.Request) {
@@ -15,7 +14,6 @@ func (cfg *FileConfig) UploadFileHandler(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	// Parse multipart form
 	err := r.ParseMultipartForm(10 << 20) // 10MB max
 	if err != nil {
 		http.Error(w, "File too big", http.StatusBadRequest)
@@ -29,12 +27,7 @@ func (cfg *FileConfig) UploadFileHandler(w http.ResponseWriter, r *http.Request)
 	}
 	defer file.Close()
 
-	// Timestamped upload folder
-	timestamp := time.Now().Format("2006-01-02_15-04-05")
-	destDir := filepath.Join(cfg.filePath, timestamp) //add file name
-	os.MkdirAll(destDir, os.ModePerm)
-
-	dstPath := filepath.Join(destDir, handler.Filename)
+	dstPath := filepath.Join(cfg.filePath, handler.Filename)
 	dst, err := os.Create(dstPath)
 	if err != nil {
 		http.Error(w, "Unable to save file", http.StatusInternalServerError)

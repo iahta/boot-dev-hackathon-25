@@ -15,7 +15,7 @@ func Setup() string {
 	if err != nil {
 		log.Fatalf("unable to retreive current directory")
 	}
-	fmt.Printf("Where would you like your files to go? Type the number\n 1. Current Folder: %s\n 2. Desktop\n 3. Custom\n> ", dir)
+	fmt.Printf("Where would you like your files to go? Type the number\n 1. Current Folder: %s\n 2. Custom\n> ", dir)
 	scanner := bufio.NewScanner(os.Stdin)
 	scanner.Scan()
 	input := scanner.Text()
@@ -24,28 +24,42 @@ func Setup() string {
 		fileName = GetFileName()
 		fmt.Printf("File Name: %s\n", fileName)
 	case "2":
-		//send to desktop
-	case "3":
-		fileName = GetFilePath()
-		fmt.Printf("%s", fileName)
-		//send to customer
+		dir = GetFilePath()
 	default:
-		fmt.Print("Not an option, please select a number")
-		return ""
+		fmt.Print("Not an option, please select a number\n")
+		return Setup()
 	}
 	setup := filepath.Join(dir, fileName)
-	fmt.Printf("Setup file path is: %s", setup)
+
 	return setup
 }
 
 func GetFilePath() string {
-	fmt.Print("Enter full path:")
 	scanner := bufio.NewScanner(os.Stdin)
-	scanner.Scan()
-	dir := scanner.Text()
 
-	fmt.Println("Using directory:", dir)
-	return "string return"
+	for {
+		fmt.Print("Enter full path:")
+		scanner.Scan()
+		dir := scanner.Text()
+
+		info, err := os.Stat(dir)
+		if err != nil {
+			if os.IsNotExist(err) {
+				fmt.Printf("File Path %s does not exist\n", dir)
+			} else {
+				fmt.Printf("Error getting file path info for %s", dir)
+			}
+			continue
+		}
+		if !info.IsDir() {
+			fmt.Printf("%s is a file\n", dir)
+			continue
+		}
+
+		fmt.Println("Using directory:", dir)
+		return dir
+	}
+
 }
 
 func GetFileName() string {
@@ -55,12 +69,12 @@ func GetFileName() string {
 	dir := scanner.Text()
 	if dir == "" {
 		fmt.Print("Must enter file name\n")
-		dir = GetFileName()
+		return GetFileName()
 	}
 	split := strings.Split(dir, " ")
 	if len(split) > 1 {
 		fmt.Print("File name can not be more than one word\n")
-		dir = GetFileName()
+		return GetFileName()
 	}
 	return dir
 }
