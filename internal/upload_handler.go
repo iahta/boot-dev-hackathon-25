@@ -1,7 +1,6 @@
 package internal
 
 import (
-	"fmt"
 	"io"
 	"net/http"
 	"os"
@@ -40,8 +39,6 @@ func (cfg *FileConfig) UploadFileHandler(w http.ResponseWriter, r *http.Request)
 		http.Error(w, "Error saving file", http.StatusInternalServerError)
 		return
 	}
-
-	fmt.Fprintf(w, "✅ File received: %s", handler.Filename)
 }
 
 /*

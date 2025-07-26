@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"fmt"
 	"log"
 	"net"
 	"net/http"
@@ -8,8 +9,11 @@ import (
 )
 
 func Server(filePath string) {
+	ipAddress := getLocalIP()
+	url := fmt.Sprintf("http://%s:8080", ipAddress)
 	cfg := FileConfig{
 		filePath: filePath,
+		url:      url,
 	}
 
 	err := os.MkdirAll(filePath, os.ModePerm)
@@ -19,16 +23,18 @@ func Server(filePath string) {
 
 	mux := http.NewServeMux()
 	appHandler := http.StripPrefix("/app", http.FileServer(http.Dir("/")))
+	staticHanlder := http.StripPrefix("/static", http.FileServer(http.Dir("static")))
+	mux.Handle("/static/", staticHanlder)
 	mux.Handle("/app/", appHandler)
 	mux.HandleFunc("/", cfg.UploadFormHandler)
 	mux.HandleFunc("/upload", cfg.UploadFileHandler)
+	mux.HandleFunc("/qrcode", cfg.QRHandler)
 
-	ipAddress := getLocalIP()
 	srv := &http.Server{
 		Addr:    ipAddress + ":8080",
 		Handler: mux,
 	}
-	log.Printf("Server started on http://%s:8080", ipAddress)
+	log.Printf("Server started on %s", url)
 	log.Fatal(srv.ListenAndServe())
 }
 

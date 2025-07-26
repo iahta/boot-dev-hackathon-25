@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>DropZone</title>
     <link rel="stylesheet" href="/static/style.css">
+    <script src="/static/app.js" defer></script>
 </head>
 <body>
     <h1>📂 DropZone</h1>
@@ -11,5 +12,10 @@
         <input type="file" name="uploadFile" required>
         <button type="submit">Upload</button>
     </form>
+    <form>
+        <button type="button" id="qrbutton">QR Code</button>
+        <div id="qrimage"></div>
+    </form>
+    
 </body>
 </html>
