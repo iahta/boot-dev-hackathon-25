@@ -26,9 +26,9 @@ func Server(filePath string) {
 	staticHanlder := http.StripPrefix("/static", http.FileServer(http.Dir("static")))
 	mux.Handle("/static/", staticHanlder)
 	mux.Handle("/app/", appHandler)
-	mux.HandleFunc("/", cfg.UploadFormHandler)
 	mux.HandleFunc("/upload", cfg.UploadFileHandler)
 	mux.HandleFunc("/qrcode", cfg.QRHandler)
+	mux.HandleFunc("/", cfg.UploadFormHandler)
 
 	srv := &http.Server{
 		Addr:    ipAddress + ":8080",

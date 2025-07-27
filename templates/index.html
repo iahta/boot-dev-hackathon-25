@@ -8,14 +8,13 @@
 </head>
 <body>
     <h1>📂 DropZone</h1>
-    <form enctype="multipart/form-data" action="/upload" method="post">
-        <input type="file" name="uploadFile" required>
+    <form enctype="multipart/form-data" id="uploadForm">
+        <input type="file" name="uploadFile[]" id="uploadFile" multiple/>
         <button type="submit">Upload</button>
     </form>
     <form>
         <button type="button" id="qrbutton">QR Code</button>
         <div id="qrimage"></div>
     </form>
-    
 </body>
 </html>
