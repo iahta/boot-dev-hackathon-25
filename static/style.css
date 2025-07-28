@@ -7,3 +7,10 @@ input, button {
     margin-top: 20px;
     padding: 10px;
 }
+
+.file-preview button {
+    display: block;
+    margin: 5px auto;
+    padding: 4px 8px;
+    font-size: 12px;
+}
